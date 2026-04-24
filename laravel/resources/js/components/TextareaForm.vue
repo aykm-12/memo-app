@@ -1,15 +1,32 @@
 <script setup lang="ts">
 import {ref} from 'vue';
-const texts = ref('')
-const emit = defineEmits(['updateText'])
+
+ const props = defineProps({
+     modelValue: String
+ })
+
+const emit = defineEmits(['update:modelValue', 'submit'])
 function handleInput(e) {
-    emit('updateText', e.target.value)
+    const target = e.target as HTMLTextAreaElement
+    emit('update:modelValue', target.value)
+}
+
+function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault() // 改行を防ぐ
+        emit('submit')     // 親に「保存して」と伝える
+    }
 }
 </script>
 
 <template>
 <div>
-    <textarea @input="handleInput" class="textarea" placeholder="メモを入力してください...&#13;&#10;（Enterで保存、Shift+Enterで改行）"></textarea>
+    <textarea :value="modelValue"
+              @input="handleInput"
+              @keydown="handleKeydown"
+              class="textarea"
+              placeholder="メモを入力してください...&#13;&#10;（Enterで保存、Shift+Enterで改行）"
+    ></textarea>
 </div>
 </template>
 
