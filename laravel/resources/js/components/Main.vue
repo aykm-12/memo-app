@@ -8,6 +8,23 @@ import { ref, computed } from 'vue'
 const text = ref('')
 // 1文字以上でtrue
 const isValid = computed(() => text.value.trim().length > 0)
+
+async function saveNote() {
+    const res = await fetch('/api/notes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: text.value
+        })
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    text.value = ''
+}
 </script>
 
 <template>
@@ -27,10 +44,10 @@ const isValid = computed(() => text.value.trim().length > 0)
                 <p class="new-memo">新しいメモ</p>
             </div>
             <div>
-                <TextareaForm @updateText="text = $event" />
+                <TextareaForm v-model="text" @submit="saveNote" />
             </div>
             <div>
-                <Button :disabled="!isValid"/>
+                <Button :disabled="!isValid" @click="saveNote" />
             </div>
         </div>
     </body>
