@@ -17,9 +17,9 @@ const props = defineProps({
     border: 1px none;
     background: linear-gradient(to right, orange, lightsalmon);
     border-radius: 10px;
-    margin: 10px 20px;
-    width: 300px;
-    height: 30px;
+    margin: 0 auto;
+    width: 100%;
+    height: 50px;
     display: flex;
     gap: 8px;
     justify-content: center;
