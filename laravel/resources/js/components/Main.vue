@@ -41,6 +41,14 @@ onMounted(async () => {
     notes.value = data
 })
 
+async function deleteNote(id: number) {
+    await fetch(`/api/notes/${id}`, {
+        method: 'DELETE'
+    })
+
+    notes.value = notes.value.filter(n => n.id !== id)
+}
+
 </script>
 
 <template>
@@ -71,12 +79,13 @@ onMounted(async () => {
             <div class="list-title">
                 <DocumentSvg class="logo2" />
                 <p class="saved-memo">保存されたメモ</p>
-                <p>{{ notes.length }}件</p>
+                <p class="count">{{ notes.length }}件</p>
             </div>
             <div>
-                <ListCard v-for="note in notes" :key="note.id" :note="note"/>
+                <ListCard v-for="note in notes" :key="note.id" :note="note" @deleteNote="deleteNote" />
             </div>
         </div>
+        <p class="hint">💡 Enterキーで素早く保存できます</p>
     </div>
     </body>
 </template>
@@ -89,6 +98,7 @@ onMounted(async () => {
     justify-content: center;
     gap: 8px;                /* 上下の余白 */
     height: 120px;
+    border-bottom: 2px solid antiquewhite;
 }
 
 .header-inner {
@@ -110,7 +120,7 @@ onMounted(async () => {
 
 .subtitle {
     font-size: 14px;
-    color: #666;
+    color: #666666;
 }
 
 .body {
@@ -162,8 +172,22 @@ onMounted(async () => {
     gap: 8px;
 }
 
+.count{
+    margin-left: auto;
+    color: #666666;
+    font-size: 80%;
+    padding: 5px 10px;
+    background-color: antiquewhite;
+    border-radius: 30px;
+}
+
 .saved-memo{
     font-weight: bold;
 }
 
+.hint{
+    text-align: center;
+    color: darkgray;
+    font-size: 90%;
+}
 </style>

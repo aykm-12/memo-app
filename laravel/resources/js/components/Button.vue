@@ -15,7 +15,8 @@ const props = defineProps({
 <style scoped>
 .button{
     border: 1px none;
-    background: linear-gradient(to right, orange, lightsalmon);
+    background: linear-gradient(to right, coral, lightcoral);
+    filter: brightness(1.5);
     border-radius: 10px;
     margin: 0 auto;
     width: 100%;
@@ -27,7 +28,8 @@ const props = defineProps({
 }
 
 .button:not(:disabled) {
-    background: linear-gradient(to right, red, orange);
+    background: linear-gradient(to right, coral, lightcoral);
+    filter: brightness(1);
 }
 
 .plus{
