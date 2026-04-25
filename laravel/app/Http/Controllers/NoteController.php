@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
-    public function index()
-    {
-        return view('note.index');
-    }
-
     public function store(Request $request)
     {
         $note = Note::create([
@@ -20,4 +15,10 @@ class NoteController extends Controller
 
         return response()->json($note);
     }
+
+    public function index()
+    {
+        return Note::all();
+    }
+
 }

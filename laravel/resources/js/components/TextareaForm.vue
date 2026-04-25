@@ -34,9 +34,11 @@ function handleKeydown(e: KeyboardEvent) {
 .textarea{
     border: 1px solid lightgray;
     border-radius: 10px;
-    margin: 10px 20px;
-    width: 300px;
+    width: 100%;
     height: 150px;
     resize: none;
+    display: flex;
+    margin: 0 auto;
+    padding: 10px;
 }
 </style>
