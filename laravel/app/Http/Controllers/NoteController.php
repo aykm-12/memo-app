@@ -29,4 +29,15 @@ class NoteController extends Controller
         return response()->json(['message' => 'deleted']);
     }
 
+    public function update(Request $request, $id)
+    {
+        $note = Note::findOrFail($id);
+
+        $note -> update([
+            'text' => $request->text
+        ]);
+
+        return response()->json($note);
+    }
+
 }

@@ -12,8 +12,8 @@ const isValid = computed(() => text.value.trim().length > 0)
 
 async function saveNote() {
     const res = await fetch('/api/notes', {
-        method: 'POST',
-        headers: {
+            method: 'POST',
+            headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -49,6 +49,49 @@ async function deleteNote(id: number) {
     notes.value = notes.value.filter(n => n.id !== id)
 }
 
+const editingId = ref<number | null>(null)
+
+function editNote(id: number) {
+    const note = notes.value.find(n => n.id === id)
+    if (note) {
+        text.value = note.text
+        editingId.value = id
+    }
+}
+
+async function handleSubmit() {
+    if (editingId.value) {
+        await updateNote()
+    } else {
+        await saveNote()
+    }
+}
+
+async function updateNote(id: number) {
+    if (!editingId.value) return
+
+    const res = await fetch(`/api/notes/${editingId.value}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: text.value
+        })
+    })
+
+    const data = await res.json()
+
+    const index = notes.value.findIndex(n => n.id === editingId.value)
+    if (index !== -1) {
+        notes.value[index] = data
+    }
+
+    text.value = ''
+    editingId.value = null
+
+}
+
 </script>
 
 <template>
@@ -69,10 +112,10 @@ async function deleteNote(id: number) {
                 <p class="new-memo">新しいメモ</p>
             </div>
             <div>
-                <TextareaForm v-model="text" @submit="saveNote" />
+                <TextareaForm v-model="text" @submit="handleSubmit" />
             </div>
             <div>
-                <Button :disabled="!isValid" @click="saveNote" />
+                <Button :disabled="!isValid" @click="handleSubmit" />
             </div>
         </div>
         <div class="list">
@@ -82,7 +125,7 @@ async function deleteNote(id: number) {
                 <p class="count">{{ notes.length }}件</p>
             </div>
             <div>
-                <ListCard v-for="note in notes" :key="note.id" :note="note" @deleteNote="deleteNote" />
+                <ListCard v-for="note in notes" :key="note.id" :note="note" @deleteNote="deleteNote" @editNote="editNote" />
             </div>
         </div>
         <p class="hint">💡 Enterキーで素早く保存できます</p>

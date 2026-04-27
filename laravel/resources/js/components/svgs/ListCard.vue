@@ -5,10 +5,17 @@ const props = defineProps({
     note: Object
 })
 
-const emit = defineEmits(['deleteNote'])
+const emit = defineEmits([
+    'deleteNote',
+    'editNote'
+])
 
 function handleDelete() {
     emit('deleteNote', props.note.id)
+}
+
+function handleEdit(){
+    emit('editNote', props.note.id)
 }
 </script>
 
@@ -17,6 +24,7 @@ function handleDelete() {
         <div class="title">{{ note.text }}</div>
         <div class="date">{{ new Date(note.created_at).toLocaleString('ja-JP') }}</div>
         <TrashSvg class="trash" @click="handleDelete" />
+        <div class="edit" @click="handleEdit">✏︎</div>
     </div>
 </template>
 
@@ -47,7 +55,22 @@ function handleDelete() {
     transform: translateY(-50%);
 }
 
+.edit{
+    opacity: 0;
+    color: #666666;
+    font-size: 120%;
+    font-weight: bold;
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: rotate(135deg) translateY(56%);
+}
+
 .listcard:hover .trash {
+    opacity: 1;
+}
+
+.listcard:hover .edit {
     opacity: 1;
 }
 
