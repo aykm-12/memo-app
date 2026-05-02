@@ -5,7 +5,10 @@ import {ref} from 'vue';
      modelValue: String
  })
 
-const emit = defineEmits(['update:modelValue', 'submit'])
+const emit = defineEmits([
+    'update:modelValue',
+    'submit'
+])
 function handleInput(e) {
     const target = e.target as HTMLTextAreaElement
     emit('update:modelValue', target.value)
