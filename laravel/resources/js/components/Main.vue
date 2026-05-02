@@ -60,14 +60,14 @@ function editNote(id: number) {
 }
 
 async function handleSubmit() {
-    if (editingId.value) {
+    if (editingId.value !==null) {
         await updateNote()
     } else {
         await saveNote()
     }
 }
 
-async function updateNote(id: number) {
+async function updateNote() {
     if (!editingId.value) return
 
     const res = await fetch(`/api/notes/${editingId.value}`, {
