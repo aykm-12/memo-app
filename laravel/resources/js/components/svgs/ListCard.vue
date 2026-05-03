@@ -22,6 +22,7 @@ function handleEdit(){
 <template>
     <div class="listcard">
         <div class="title">{{ note.text }}</div>
+        <div class="category">{{ note.category?.name }}</div>
         <div class="date">{{ new Date(note.created_at).toLocaleString('ja-JP') }}</div>
         <TrashSvg class="trash" @click="handleDelete" />
         <div class="edit" @click="handleEdit">✏︎</div>
@@ -79,6 +80,11 @@ function handleEdit(){
 }
 
 .date{
+    color: #666666;
+    font-size: 70%;
+}
+
+.category{
     color: #666666;
     font-size: 70%;
 }

@@ -10,15 +10,16 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         $note = Note::create([
-            'text' => $request->text
+            'text' => $request->text,
+            'category_id' => $request->category_id
         ]);
 
-        return response()->json($note);
+        return response()->json($note->load('category'));
     }
 
     public function index()
     {
-        return Note::all();
+        return Note::with('category')->get();
     }
 
     public function destroy($id)
@@ -34,10 +35,11 @@ class NoteController extends Controller
         $note = Note::findOrFail($id);
 
         $note -> update([
-            'text' => $request->text
+            'text' => $request->text,
+            'category_id' => $request->category_id
         ]);
 
-        return response()->json($note);
+        return response()->json($note->load('category'));
     }
 
 }
