@@ -10,6 +10,18 @@ const text = ref('')
 // 1文字以上でtrue
 const isValid = computed(() => text.value.trim().length > 0)
 
+const categories = ref([])
+const selectedCategory = ref(null)
+
+onMounted(async () => {
+    const res = await fetch('/api/categories')
+    categories.value = await res.json()
+
+    if (categories.value.length > 0) {
+        selectedCategory.value = categories.value[0].id
+    }
+})
+
 async function saveNote() {
     const res = await fetch('/api/notes', {
             method: 'POST',
@@ -17,7 +29,8 @@ async function saveNote() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            text: text.value
+            text: text.value,
+            category_id: selectedCategory.value
         })
     })
 
@@ -55,6 +68,7 @@ function editNote(id: number) {
     const note = notes.value.find(n => n.id === id)
     if (note) {
         text.value = note.text
+        selectedCategory.value = note.category_id
         editingId.value = id
     }
 }
@@ -68,7 +82,7 @@ async function handleSubmit() {
 }
 
 async function updateNote() {
-    if (!editingId.value) return
+    if (editingId.value === null) return
 
     const res = await fetch(`/api/notes/${editingId.value}`, {
         method: 'PUT',
@@ -76,7 +90,8 @@ async function updateNote() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            text: text.value
+            text: text.value,
+            category_id: selectedCategory.value
         })
     })
 
@@ -113,6 +128,16 @@ async function updateNote() {
             </div>
             <div>
                 <TextareaForm v-model="text" @submit="handleSubmit" />
+            </div>
+            <div class="category-wrap">
+                <button
+                    v-for="cat in categories"
+                    :key="cat.id"
+                    @click="selectedCategory = cat.id"
+                    :class="['category-badge', { active: selectedCategory === cat.id }]"
+                >
+                    {{ cat.name }}
+                </button>
             </div>
             <div>
                 <Button :disabled="!isValid" @click="handleSubmit" />
@@ -232,5 +257,31 @@ async function updateNote() {
     text-align: center;
     color: darkgray;
     font-size: 90%;
+}
+
+.category-wrap {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.category-badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid lightgray;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.category-badge:hover {
+    transform: translateY(-1px);
+    border-color: coral;
+}
+
+.category-badge.active {
+    background: coral;
+    color: white;
+    border-color: coral;
 }
 </style>
