@@ -54,6 +54,7 @@ function handleEdit(){
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
+    cursor: pointer;
 }
 
 .edit{
@@ -65,6 +66,7 @@ function handleEdit(){
     right: 40px;
     top: 50%;
     transform: rotate(135deg) translateY(56%);
+    cursor: pointer;
 }
 
 .listcard:hover .trash {
